@@ -5,7 +5,7 @@
 	<artifactId>maven-precheck-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>maven-precheck-plugin</name>
-	<version>0.1</version>
+	<version>1.0</version>
 	<prerequisites>
 		<maven>${maven.version}</maven>
 	</prerequisites>
