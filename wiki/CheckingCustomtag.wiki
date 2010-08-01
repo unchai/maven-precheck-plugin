@@ -1,1 +1,32 @@
-blank
+#summary Check custom tag
+
+=== Check webwork configuration ===
+
+The following configuration snippet would check custom tag.
+
+{{{
+  <build>
+    <plugins>
+      ...
+      <plugin>
+        <groupId>org.openwebtop.maven.plugins</groupId>
+        <artifactId>maven-precheck-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>customtag</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <customTag>
+            <basedir>web</basedir>
+            <includes>
+              <include>**/*.jsp</include>
+            </includes>
+          </customTag>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+}}}
