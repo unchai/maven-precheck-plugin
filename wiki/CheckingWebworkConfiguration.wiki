@@ -16,17 +16,17 @@ The following configuration snippet would check webwork configuration.
             <goals>
               <goal>webwork</goal>
             </goals>
-            <configuration>
-              <webworkConfiguration>
-                <webworkConfigurationFiles>
-                  <webworkConfigurationFile>src/main/resources/xwork.xml</webworkConfigurationFile>
-                  <webworkConfigurationFile>src/main/resources/xwork-part1.xml</webworkConfigurationFile>
-                  <webworkConfigurationFile>src/main/resources/xwork-part2.xml</webworkConfigurationFile>
-                </webworkConfigurationFiles>
-              </webworkConfiguration>
-            </configuration>
           </execution>
         </executions>
+        <configuration>
+          <webworkConfiguration>
+            <webworkConfigurationFiles>
+              <webworkConfigurationFile>src/main/resources/xwork.xml</webworkConfigurationFile>
+              <webworkConfigurationFile>src/main/resources/xwork-part1.xml</webworkConfigurationFile>
+              <webworkConfigurationFile>src/main/resources/xwork-part2.xml</webworkConfigurationFile>
+            </webworkConfigurationFiles>
+          </webworkConfiguration>
+        </configuration>
       </plugin>
     </plugins>
   </build>
