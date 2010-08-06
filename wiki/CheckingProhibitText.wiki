@@ -14,7 +14,7 @@ The following configuration snippet would check all files in the directory '''we
         <executions>
           <execution>
             <goals>
-              <goal>prohibit-text</goal>
+              <goal>prohibittext</goal>
             </goals>
           </execution>
         </executions>
