@@ -13,6 +13,8 @@ The following configuration snippet would check webwork configuration.
         <artifactId>maven-precheck-plugin</artifactId>
         <executions>
           <execution>
+            <id>webwork</id>
+            <phase>validate</phase>
             <goals>
               <goal>webwork</goal>
             </goals>
