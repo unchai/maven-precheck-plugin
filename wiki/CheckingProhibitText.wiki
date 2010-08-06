@@ -26,10 +26,10 @@ The following configuration snippet would check all files in the directory '''we
             </includes>
             <prohibitTextPatterns>
               <prohibitTextPattern>
-                 <![CDATA[<img.*src="http://localhost/.*".*>]]>
+                 <![CDATA[<img[^>]*src="http://localhost[^>]*>]]>
               </prohibitTextPattern>
               <prohibitTextPattern>
-                <![CDATA[<script.*src="http://localhost/.*".*>]]>
+                <![CDATA[<script[^>]*src="http://localhost[^>]*]]>
               </prohibitTextPattern>
             </prohibitTextPatterns>
           </prohibitText>
