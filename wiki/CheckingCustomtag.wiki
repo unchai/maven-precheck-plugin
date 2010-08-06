@@ -13,6 +13,8 @@ The following configuration snippet would check custom tag.
         <artifactId>maven-precheck-plugin</artifactId>
         <executions>
           <execution>
+            <id>customtag</id>
+            <phase>validate</phase>
             <goals>
               <goal>customtag</goal>
             </goals>
