@@ -25,10 +25,19 @@ import java.io.File;
  * @since 2010. 5. 3.
  */
 public class ProhibitText {
+	private String description;
 	private File basedir;
 	private String[] includes;
 	private String[] excludes;
 	private String[] prohibitTextPatterns;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public File getBasedir() {
 		return basedir;

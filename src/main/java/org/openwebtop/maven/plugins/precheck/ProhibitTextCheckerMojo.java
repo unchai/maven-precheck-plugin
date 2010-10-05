@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.DirectoryScanner;
@@ -46,7 +47,7 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 	 *
 	 * @parameter
 	 */
-	private ProhibitText prohibitText;
+	private ProhibitText[] prohibitTexts;
 
 	private ProhibitTextChecker prohibitTextChecker;
 	private DirectoryScanner directoryScanner;
@@ -63,36 +64,52 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 	 * @throws MojoFailureException
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		directoryScanner.setBasedir(prohibitText.getBasedir());
-		directoryScanner.setIncludes(prohibitText.getIncludes());
-		directoryScanner.setExcludes(prohibitText.getExcludes());
-		directoryScanner.scan();
+		getLog().info("Checking prohibit text...");
 
-		final String[] filenames = directoryScanner.getIncludedFiles();
-		getLog().info(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
-		getLog().info("Start searching...");
+		if (ArrayUtils.isEmpty(prohibitTexts)) {
+			getLog().info("There is no configuration for checking prohibit text. skipping...");
 
-		if (!ArrayUtils.isEmpty(filenames)) {
-			final List<ProhibitTextError> prohibitTextErrors = new ArrayList<ProhibitTextError>();
+			return;
+		}
 
-			for (String filename : filenames) {
-				final File file = new File(prohibitText.getBasedir() + File.separator + filename);
-				getLog().debug("Include " + filename);
+		final List<ProhibitTextError> prohibitTextErrors = new ArrayList<ProhibitTextError>();
 
-				try {
-					prohibitTextErrors.addAll(prohibitTextChecker.check(file, prohibitText.getProhibitTextPatterns()));
-				} catch (IOException e) {
-					getLog().error(String.format("Cannot read target file. [%s]", filename), e);
-				}
+		for (ProhibitText prohibitText : prohibitTexts) {
+			if (StringUtils.isNotBlank(prohibitText.getDescription())) {
+				getLog().info("Prohibit text check : " + prohibitText.getDescription());
+			} else {
+				getLog().info("Prohibit text check : noname");
 			}
 
-			if (CollectionUtils.isNotEmpty(prohibitTextErrors)) {
-				for (ProhibitTextError textError : prohibitTextErrors) {
-					getLog().info(textError.toString());
-				}
+			directoryScanner.setBasedir(prohibitText.getBasedir());
+			directoryScanner.setIncludes(prohibitText.getIncludes());
+			directoryScanner.setExcludes(prohibitText.getExcludes());
+			directoryScanner.scan();
 
-				throw new MojoFailureException(String.format("%d files have prohibit text!", prohibitTextErrors.size()));
+			final String[] filenames = directoryScanner.getIncludedFiles();
+			getLog().info(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
+			getLog().info("Start searching...");
+
+			if (!ArrayUtils.isEmpty(filenames)) {
+				for (String filename : filenames) {
+					final File file = new File(prohibitText.getBasedir() + File.separator + filename);
+					getLog().debug("Include " + filename);
+
+					try {
+						prohibitTextErrors.addAll(prohibitTextChecker.check(file, prohibitText.getProhibitTextPatterns()));
+					} catch (IOException e) {
+						getLog().error(String.format("Cannot read target file. [%s]", filename), e);
+					}
+				}
 			}
+		}
+
+		if (CollectionUtils.isNotEmpty(prohibitTextErrors)) {
+			for (ProhibitTextError textError : prohibitTextErrors) {
+				getLog().info(textError.toString());
+			}
+
+			throw new MojoFailureException(String.format("%d files have prohibit text!", prohibitTextErrors.size()));
 		}
 
 		getLog().info("There is no prohibit text.");
@@ -106,8 +123,12 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 		this.directoryScanner = directoryScanner;
 	}
 
-	public void setProhibitText(ProhibitText prohibitText) {
-		this.prohibitText = prohibitText;
+	public ProhibitText[] getProhibitTexts() {
+		return prohibitTexts;
+	}
+
+	public void setProhibitTexts(ProhibitText[] prohibitTexts) {
+		this.prohibitTexts = prohibitTexts;
 	}
 
 }
