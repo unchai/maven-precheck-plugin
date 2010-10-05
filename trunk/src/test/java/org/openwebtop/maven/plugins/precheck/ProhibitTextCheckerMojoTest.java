@@ -16,10 +16,7 @@
  */
 package org.openwebtop.maven.plugins.precheck;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 
@@ -27,7 +24,6 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitText;
 import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitTextChecker;
 
@@ -63,7 +59,7 @@ public class ProhibitTextCheckerMojoTest {
 		prohibitText.setBasedir(baseDirectory);
 		prohibitText.setProhibitTextPatterns(new String[] {"error_string"});
 
-		prohibitTextCheckerMojo.setProhibitText(prohibitText);
+		prohibitTextCheckerMojo.setProhibitTexts(new ProhibitText[] {prohibitText});
 		prohibitTextCheckerMojo.execute();
 
 		final File file = FileUtils.toFile(ProhibitTextCheckerMojoTest.class.getResource("prohibittext/test.html"));
