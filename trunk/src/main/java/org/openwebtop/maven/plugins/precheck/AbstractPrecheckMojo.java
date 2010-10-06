@@ -45,12 +45,25 @@ public abstract class AbstractPrecheckMojo extends AbstractMojo {
 	 */
 	private Settings settings;
 
+	/**
+	 * Skip current goals
+	 * 
+	 * @parameter default-value="false"
+	 */
+	protected boolean skip;
+
 	public MavenProject getProject() {
 		return project;
 	}
 
 	public Settings getSettings() {
 		return settings;
+	}
+
+	public abstract String getGoalName();
+
+	public void printLog(String message) {
+		getLog().info(getGoalName() + " : " + message);
 	}
 
 }

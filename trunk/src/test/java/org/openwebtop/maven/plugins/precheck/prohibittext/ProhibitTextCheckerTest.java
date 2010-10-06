@@ -16,11 +16,8 @@
  */
 package org.openwebtop.maven.plugins.precheck.prohibittext;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +25,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextError;
 
 /**
@@ -48,7 +44,7 @@ public class ProhibitTextCheckerTest {
 	@Test
 	public void testCheck() throws Exception {
 		final File file = FileUtils.toFile(ProhibitTextCheckerTest.class.getResource("test.html"));
-		final String[] strings = {"(^ex)"};
+		final String[] strings = {"(.*)(^ex)(.*)"};
 
 		final List<ProhibitTextError> textErrors = textChecker.check(file, strings);
 

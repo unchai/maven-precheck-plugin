@@ -38,7 +38,7 @@ import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkPackage;
 import org.xml.sax.SAXException;
 
 /**
- * the WebworkCheckerMojo is used to check webwork configuration.
+ * The WebworkCheckerMojo is used to check webwork configuration.
  *
  * @author Jaehyeon Nam (dotoli21@gmail.com)
  * @since 2010. 5. 5.
@@ -47,6 +47,8 @@ import org.xml.sax.SAXException;
  * @phase process-resources
  */
 public class WebworkCheckerMojo extends AbstractPrecheckMojo {
+	private final static String GOAL_NAME = "webwork";
+
 	/**
 	 * Webwork configuration
 	 *
@@ -66,6 +68,11 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 		webworkCheckers.add(new DuplicateNamespaceWebworkCheckerImpl());
 	}
 
+	@Override
+	public String getGoalName() {
+		return GOAL_NAME;
+	}
+
 	/**
 	 * Mojo execute
 	 *
@@ -73,9 +80,15 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 	 * @throws MojoFailureException MojoFailureException
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		final List<WebworkPackage> webworkPackages = new ArrayList<WebworkPackage>();
+		printLog("----- Start to check webwork configuration -----");
+		printLog("Target files : " + ArrayUtils.toString(webworkConfiguration.getWebworkConfigurationFiles()));
 
-		getLog().info(String.format("Start to check webwork configuration. [%s]", ArrayUtils.toString(webworkConfiguration.getWebworkConfigurationFiles())));
+		if (skip) {
+			printLog("----- Skip check webwork configuration -----");
+			return;
+		}
+
+		final List<WebworkPackage> webworkPackages = new ArrayList<WebworkPackage>();
 
 		for (File webworkConfigurationFile : webworkConfiguration.getWebworkConfigurationFiles()) {
 			try {
@@ -100,6 +113,8 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 
 			throw new MojoFailureException("Webwork configuration has problems.");
 		}
+
+		printLog("----- Webwork configuration check has been done -----");
 	}
 
 	public WebworkConfigurationParser getWebworkConfigurationParser() {

@@ -42,6 +42,7 @@ import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextErro
  * @phase process-resources
  */
 public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
+	private final static String GOAL_NAME = "prohibittext";
 	/**
 	 * Prohibit text
 	 *
@@ -57,6 +58,11 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 		directoryScanner = new DirectoryScanner();
 	}
 
+	@Override
+	public String getGoalName() {
+		return GOAL_NAME;
+	}
+
 	/**
 	 * Mojo execute
 	 *
@@ -64,10 +70,15 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 	 * @throws MojoFailureException
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("Checking prohibit text...");
+		printLog("----- Start to check prohibit text -----");
+
+		if (skip) {
+			printLog("----- Skip check prohibit text -----");
+			return;
+		}
 
 		if (ArrayUtils.isEmpty(prohibitTexts)) {
-			getLog().info("There is no configuration for checking prohibit text. skipping...");
+			printLog("There is no configuration for checking prohibit text. skipping...");
 
 			return;
 		}
@@ -76,9 +87,9 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 
 		for (ProhibitText prohibitText : prohibitTexts) {
 			if (StringUtils.isNotBlank(prohibitText.getDescription())) {
-				getLog().info("Prohibit text check : " + prohibitText.getDescription());
+				printLog("Prohibit text check : " + prohibitText.getDescription());
 			} else {
-				getLog().info("Prohibit text check : noname");
+				printLog("Prohibit text check : noname");
 			}
 
 			directoryScanner.setBasedir(prohibitText.getBasedir());
@@ -87,8 +98,8 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 			directoryScanner.scan();
 
 			final String[] filenames = directoryScanner.getIncludedFiles();
-			getLog().info(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
-			getLog().info("Start searching...");
+			printLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
+			printLog("Start checking...");
 
 			if (!ArrayUtils.isEmpty(filenames)) {
 				for (String filename : filenames) {
@@ -102,17 +113,19 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 					}
 				}
 			}
+
+			printLog("Done...");
 		}
 
 		if (CollectionUtils.isNotEmpty(prohibitTextErrors)) {
 			for (ProhibitTextError textError : prohibitTextErrors) {
-				getLog().info(textError.toString());
+				printLog(textError.toString());
 			}
 
 			throw new MojoFailureException(String.format("%d files have prohibit text!", prohibitTextErrors.size()));
 		}
 
-		getLog().info("There is no prohibit text.");
+		printLog("----- There is no prohibit text -----");
 	}
 
 	public void setProhibitTextChecker(ProhibitTextChecker prohibitTextChecker) {
