@@ -31,10 +31,17 @@ import org.openwebtop.maven.plugins.precheck.customtag.CustomTagChecker;
 import org.openwebtop.maven.plugins.precheck.customtag.model.CustomTagError;
 
 /**
+ * The CustomTagCheckerMojo is used to check undefined custom tag in markup. 
+ *
+ * @author Jaehyeon Nam (dotoli21@gmail.com)
+ * @since 2010. 10. 6.
+ *
  * @goal customtag
  * @phase process-resources
  */
 public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
+	private final static String GOAL_NAME = "customtag";
+
 	/**
 	 * @parameter
 	 */
@@ -49,15 +56,27 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 
 	}
 
+	@Override
+	public String getGoalName() {
+		return GOAL_NAME;
+	}
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		printLog("----- Start to check custom tag -----");
+
+		if (skip) {
+			printLog("----- Skip check custom tag -----");
+			return;
+		}
+
 		directoryScanner.setBasedir(customTag.getBasedir());
 		directoryScanner.setIncludes(customTag.getIncludes());
 		directoryScanner.setExcludes(customTag.getExcludes());
 		directoryScanner.scan();
 
 		final String[] filenames = directoryScanner.getIncludedFiles();
-		getLog().info(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
-		getLog().info("Start searching...");
+		printLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
+		printLog("Start searching...");
 
 		if (!ArrayUtils.isEmpty(filenames)) {
 			final List<CustomTagError> customTagErrors = new ArrayList<CustomTagError>();
@@ -75,12 +94,14 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 
 			if (CollectionUtils.isNotEmpty(customTagErrors)) {
 				for (CustomTagError customTagError : customTagErrors) {
-					getLog().info(customTagError.toString());
+					printLog(customTagError.toString());
 				}
 
 				throw new MojoFailureException(String.format("%d files arg using undefiend custom tag!", customTagErrors.size()));
 			}
 		}
+
+		printLog("----- Custom tag check has been done -----");
 	}
 
 	public void setCustomTag(CustomTag customTag) {

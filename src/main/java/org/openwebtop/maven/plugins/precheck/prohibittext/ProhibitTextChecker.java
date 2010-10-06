@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-
 import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextError;
 
 /**
@@ -59,7 +58,7 @@ public class ProhibitTextChecker {
 				lineNumber++;
 
 				for (String prohibitTextPattern : prohibitTextPatterns) {
-					if (line.matches("(.*)(" + prohibitTextPattern + ")(.*)")) {
+					if (line.matches(prohibitTextPattern)) {
 						final ProhibitTextError textError = new ProhibitTextError();
 						textError.setFile(file);
 						textError.setLineNumber(lineNumber);
