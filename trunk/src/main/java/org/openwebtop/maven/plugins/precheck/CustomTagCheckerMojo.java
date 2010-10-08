@@ -43,6 +43,8 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 	private final static String GOAL_NAME = "customtag";
 
 	/**
+	 * Custom tag configuration
+	 * 
 	 * @parameter
 	 */
 	private CustomTag customTag;
@@ -53,7 +55,6 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 	public CustomTagCheckerMojo() {
 		customTagChecker = new CustomTagChecker();
 		directoryScanner = new DirectoryScanner();
-
 	}
 
 	@Override
