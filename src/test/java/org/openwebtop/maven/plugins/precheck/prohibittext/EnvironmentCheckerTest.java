@@ -33,7 +33,7 @@ import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextErro
  * @author Jaehyeon Nam (dotoli21@gmail.com)
  * @since 2010. 5. 5.
  */
-public class ProhibitTextCheckerTest {
+public class EnvironmentCheckerTest {
 	private ProhibitTextChecker textChecker;
 
 	@Before
@@ -43,7 +43,7 @@ public class ProhibitTextCheckerTest {
 
 	@Test
 	public void testCheck() throws Exception {
-		final File file = FileUtils.toFile(ProhibitTextCheckerTest.class.getResource("test.html"));
+		final File file = FileUtils.toFile(EnvironmentCheckerTest.class.getResource("test.html"));
 		final String[] strings = {"(.*)(^ex)(.*)"};
 
 		final List<ProhibitTextError> textErrors = textChecker.check(file, strings);
