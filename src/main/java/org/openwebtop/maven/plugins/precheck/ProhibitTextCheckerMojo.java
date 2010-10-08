@@ -43,6 +43,7 @@ import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextErro
  */
 public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 	private final static String GOAL_NAME = "prohibittext";
+
 	/**
 	 * Prohibit text
 	 *
