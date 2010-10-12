@@ -3,9 +3,18 @@ package org.openwebtop.maven.plugins.precheck.environment;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class Environment {
+	private String description;
 	private String extractRegExp;
 	private EnvironmentFiles checkTarget;
 	private EnvironmentFiles checkSource;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getExtractRegExp() {
 		return extractRegExp;
