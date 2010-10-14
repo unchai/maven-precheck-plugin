@@ -8,7 +8,7 @@
 	<prerequisites>
 		<maven>${maven.version}</maven>
 	</prerequisites>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<description>Webwork configuration &amp; Prohibit text pre-check plugin</description>
 	<url>http://code.google.com/p/maven-precheck-plugin</url>
 	<licenses>
