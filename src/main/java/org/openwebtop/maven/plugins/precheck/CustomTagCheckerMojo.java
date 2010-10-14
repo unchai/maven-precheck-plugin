@@ -26,8 +26,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.openwebtop.maven.plugins.precheck.customtag.CustomTag;
 import org.openwebtop.maven.plugins.precheck.customtag.CustomTagChecker;
+import org.openwebtop.maven.plugins.precheck.customtag.model.CustomTag;
 import org.openwebtop.maven.plugins.precheck.customtag.model.CustomTagError;
 
 /**
@@ -62,11 +62,9 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 		return GOAL_NAME;
 	}
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		printLog("----- Start to check custom tag -----");
-
-		if (skip) {
-			printLog("----- Skip check custom tag -----");
+	public void onExecute() throws MojoExecutionException, MojoFailureException {
+		if (customTag == null) {
+			printInfoLog("There is no configuration for checking custom tag. skipping...");
 			return;
 		}
 
@@ -76,10 +74,10 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 		directoryScanner.scan();
 
 		final String[] filenames = directoryScanner.getIncludedFiles();
-		printLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
-		printLog("Start searching...");
+		printInfoLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
+		printInfoLog("Start searching...");
 
-		if (!ArrayUtils.isEmpty(filenames)) {
+		if (ArrayUtils.isNotEmpty(filenames)) {
 			final List<CustomTagError> customTagErrors = new ArrayList<CustomTagError>();
 
 			for (String filename : filenames) {
@@ -95,14 +93,12 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 
 			if (CollectionUtils.isNotEmpty(customTagErrors)) {
 				for (CustomTagError customTagError : customTagErrors) {
-					printLog(customTagError.toString());
+					printInfoLog(customTagError.toString());
 				}
 
 				throw new MojoFailureException(String.format("%d files arg using undefiend custom tag!", customTagErrors.size()));
 			}
 		}
-
-		printLog("----- Custom tag check has been done -----");
 	}
 
 	public void setCustomTag(CustomTag customTag) {

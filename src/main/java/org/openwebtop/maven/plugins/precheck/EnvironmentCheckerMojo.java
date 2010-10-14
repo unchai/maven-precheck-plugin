@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2010  Jaehyeon Nam (dotoli21@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.openwebtop.maven.plugins.precheck;
 
 import java.io.File;
@@ -10,13 +26,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.openwebtop.maven.plugins.precheck.environment.Environment;
 import org.openwebtop.maven.plugins.precheck.environment.EnvironmentChecker;
-import org.openwebtop.maven.plugins.precheck.environment.EnvironmentFiles;
+import org.openwebtop.maven.plugins.precheck.environment.model.Environment;
 import org.openwebtop.maven.plugins.precheck.environment.model.EnvironmentError;
+import org.openwebtop.maven.plugins.precheck.environment.model.EnvironmentFiles;
 
 /**
- * 
+ * Environment Checker
  * 
  * @author Jaehyeon Nam
  * @since 2010. 10. 8.
@@ -39,17 +55,9 @@ public class EnvironmentCheckerMojo extends AbstractPrecheckMojo {
 	}
 
 	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		printLog("----- Start to check environment -----");
-
-		if (skip) {
-			printLog("----- Skip check environment -----");
-			return;
-		}
-
+	public void onExecute() throws MojoExecutionException, MojoFailureException {
 		if (ArrayUtils.isEmpty(environments)) {
-			printLog("There is no configuration for checking environment. skipping...");
-
+			printInfoLog("There is no configuration for checking environment. skipping...");
 			return;
 		}
 
@@ -70,13 +78,11 @@ public class EnvironmentCheckerMojo extends AbstractPrecheckMojo {
 
 		if (CollectionUtils.isNotEmpty(environmentErrors)) {
 			for (EnvironmentError environmentError : environmentErrors) {
-				printLog(environmentError.toString());
+				printInfoLog(environmentError.toString());
 			}
 
 			throw new MojoFailureException(String.format("%d files have been detected!", environmentErrors.size()));
 		}
-
-		printLog("----- There is no prohibit text -----");
 	}
 
 	private File[] getFilelist(EnvironmentFiles environmentFiles) {

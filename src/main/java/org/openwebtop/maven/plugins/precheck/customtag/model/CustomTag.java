@@ -14,25 +14,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openwebtop.maven.plugins.precheck.webwork;
+package org.openwebtop.maven.plugins.precheck.customtag.model;
 
 import java.io.File;
 
 /**
- * Webwork configuration check maven configuration
+ * Custom tag
  *
  * @author Jaehyeon Nam (dotoli21@gmail.com)
- * @since 2010. 5. 5.
+ * @since 2010. 5. 11.
  */
-public class WebworkConfiguration {
-	private File[] webworkConfigurationFiles;
+public class CustomTag {
+	private File basedir;
+	private String[] includes;
+	private String[] excludes;
 
-	public File[] getWebworkConfigurationFiles() {
-		return webworkConfigurationFiles;
+	public File getBasedir() {
+		return basedir;
 	}
 
-	public void setWebworkConfigurationFiles(File[] webworkConfigurationFiles) {
-		this.webworkConfigurationFiles = webworkConfigurationFiles;
+	public void setBasedir(File basedir) {
+		this.basedir = basedir;
+	}
+
+	public String[] getIncludes() {
+		return includes;
+	}
+
+	public void setIncludes(String[] includes) {
+		this.includes = includes;
+	}
+
+	public String[] getExcludes() {
+		return excludes;
+	}
+
+	public void setExcludes(String[] excludes) {
+		this.excludes = excludes;
 	}
 
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openwebtop.maven.plugins.precheck.prohibittext;
+package org.openwebtop.maven.plugins.precheck.prohibittext.model;
 
 import java.io.File;
 
@@ -25,19 +25,10 @@ import java.io.File;
  * @since 2010. 5. 3.
  */
 public class ProhibitText {
-	private String description;
 	private File basedir;
 	private String[] includes;
 	private String[] excludes;
 	private String[] prohibitTextPatterns;
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
 	public File getBasedir() {
 		return basedir;

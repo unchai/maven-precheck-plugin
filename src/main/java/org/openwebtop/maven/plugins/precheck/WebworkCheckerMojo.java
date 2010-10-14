@@ -27,12 +27,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.openwebtop.maven.plugins.precheck.webwork.WebworkConfiguration;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.openwebtop.maven.plugins.precheck.webwork.WebworkConfigurationParser;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.DuplicateActionNameWebworkCheckerImpl;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.DuplicateNamespaceWebworkCheckerImpl;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.DuplicatedPackageNameWebworkCheckerImpl;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.WebworkChecker;
+import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkConfiguration;
 import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkConfigurationError;
 import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkPackage;
 import org.xml.sax.SAXException;
@@ -58,6 +59,7 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 
 	private WebworkConfigurationParser webworkConfigurationParser;
 	private Set<WebworkChecker> webworkCheckers;
+	private DirectoryScanner directoryScanner;
 
 	public WebworkCheckerMojo() {
 		webworkConfigurationParser = new WebworkConfigurationParser();
@@ -66,6 +68,8 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 		webworkCheckers.add(new DuplicateActionNameWebworkCheckerImpl());
 		webworkCheckers.add(new DuplicatedPackageNameWebworkCheckerImpl());
 		webworkCheckers.add(new DuplicateNamespaceWebworkCheckerImpl());
+
+		directoryScanner = new DirectoryScanner();
 	}
 
 	@Override
@@ -79,18 +83,56 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 	 * @throws MojoExecutionException MojoExecutionException
 	 * @throws MojoFailureException MojoFailureException
 	 */
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		printLog("----- Start to check webwork configuration -----");
-		printLog("Target files : " + ArrayUtils.toString(webworkConfiguration.getWebworkConfigurationFiles()));
-
-		if (skip) {
-			printLog("----- Skip check webwork configuration -----");
+	public void onExecute() throws MojoExecutionException, MojoFailureException {
+		if (webworkConfiguration == null) {
+			printInfoLog("There is no configuration for checking webwork configuration. skipping...");
 			return;
 		}
 
+		directoryScanner.setBasedir(webworkConfiguration.getBasedir());
+		directoryScanner.setIncludes(webworkConfiguration.getIncludes());
+		directoryScanner.setExcludes(webworkConfiguration.getExcludes());
+		directoryScanner.scan();
+
+		final String[] filenames = directoryScanner.getIncludedFiles();
+		printInfoLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
+		printInfoLog("Start checking...");
+
+		if (ArrayUtils.isNotEmpty(filenames)) {
+			final List<File> webworkConfigurationFiles = new ArrayList<File>();
+
+			for (String filename : filenames) {
+				webworkConfigurationFiles.add(new File(webworkConfiguration.getBasedir() + File.separator + filename));
+			}
+
+			final List<WebworkPackage> webworkPackages = getWebworkConfiguration(webworkConfigurationFiles.toArray(new File[0]));
+
+			final List<WebworkConfigurationError> webworkConfigurationErrors = new ArrayList<WebworkConfigurationError>();
+
+			for (WebworkChecker webworkChecker : webworkCheckers) {
+				webworkConfigurationErrors.addAll(webworkChecker.check(webworkPackages));
+			}
+
+			if (CollectionUtils.isNotEmpty(webworkConfigurationErrors)) {
+				for (WebworkConfigurationError error : webworkConfigurationErrors) {
+					printInfoLog(error.toString());
+				}
+
+				throw new MojoFailureException("Webwork configuration has problems.");
+			}
+		}
+	}
+
+	/**
+	 * Get webwork configuration from file
+	 * 
+	 * @return Webwork package list
+	 * @throws MojoFailureException MojoFailureException
+	 */
+	private List<WebworkPackage> getWebworkConfiguration(File[] files) throws MojoFailureException {
 		final List<WebworkPackage> webworkPackages = new ArrayList<WebworkPackage>();
 
-		for (File webworkConfigurationFile : webworkConfiguration.getWebworkConfigurationFiles()) {
+		for (File webworkConfigurationFile : files) {
 			try {
 				webworkPackages.addAll(webworkConfigurationParser.getWebworkPackages(webworkConfigurationFile));
 			} catch (IOException e) {
@@ -99,34 +141,19 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 				throw new MojoFailureException(String.format("Cannot parse configuration file! [%s]", webworkConfigurationFile.getName()));
 			}
 		}
-
-		final List<WebworkConfigurationError> webworkConfigurationErrors = new ArrayList<WebworkConfigurationError>();
-
-		for (WebworkChecker webworkChecker : webworkCheckers) {
-			webworkConfigurationErrors.addAll(webworkChecker.check(webworkPackages));
-		}
-
-		if (CollectionUtils.isNotEmpty(webworkConfigurationErrors)) {
-			for (WebworkConfigurationError error : webworkConfigurationErrors) {
-				getLog().error(error.toString());
-			}
-
-			throw new MojoFailureException("Webwork configuration has problems.");
-		}
-
-		printLog("----- Webwork configuration check has been done -----");
+		return webworkPackages;
 	}
 
-	public WebworkConfigurationParser getWebworkConfigurationParser() {
-		return webworkConfigurationParser;
+	public void setWebworkConfiguration(WebworkConfiguration webworkConfiguration) {
+		this.webworkConfiguration = webworkConfiguration;
 	}
 
 	public void setWebworkConfigurationParser(WebworkConfigurationParser webworkConfigurationParser) {
 		this.webworkConfigurationParser = webworkConfigurationParser;
 	}
 
-	public void setWebworkConfiguration(WebworkConfiguration webworkConfiguration) {
-		this.webworkConfiguration = webworkConfiguration;
+	public void setDirectoryScanner(DirectoryScanner directoryScanner) {
+		this.directoryScanner = directoryScanner;
 	}
 
 }

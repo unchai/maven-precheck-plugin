@@ -22,10 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.digester.Digester;
-import org.xml.sax.SAXException;
-
 import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkAction;
 import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkPackage;
+import org.xml.sax.SAXException;
 
 /**
  * Webwork configuration parser

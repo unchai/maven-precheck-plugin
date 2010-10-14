@@ -23,12 +23,11 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitText;
 import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitTextChecker;
+import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitText;
 import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextError;
 
 /**
@@ -70,63 +69,47 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 	 * @throws MojoExecutionException
 	 * @throws MojoFailureException
 	 */
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		printLog("----- Start to check prohibit text -----");
-
-		if (skip) {
-			printLog("----- Skip check prohibit text -----");
-			return;
-		}
-
+	public void onExecute() throws MojoExecutionException, MojoFailureException {
 		if (ArrayUtils.isEmpty(prohibitTexts)) {
-			printLog("There is no configuration for checking prohibit text. skipping...");
-
+			printInfoLog("There is no configuration for checking prohibit text. skipping...");
 			return;
 		}
 
 		final List<ProhibitTextError> prohibitTextErrors = new ArrayList<ProhibitTextError>();
 
 		for (ProhibitText prohibitText : prohibitTexts) {
-			if (StringUtils.isNotBlank(prohibitText.getDescription())) {
-				printLog("Prohibit text check : " + prohibitText.getDescription());
-			} else {
-				printLog("Prohibit text check : noname");
-			}
-
 			directoryScanner.setBasedir(prohibitText.getBasedir());
 			directoryScanner.setIncludes(prohibitText.getIncludes());
 			directoryScanner.setExcludes(prohibitText.getExcludes());
 			directoryScanner.scan();
 
 			final String[] filenames = directoryScanner.getIncludedFiles();
-			printLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
-			printLog("Start checking...");
+			printInfoLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
+			printInfoLog("Start checking...");
 
-			if (!ArrayUtils.isEmpty(filenames)) {
+			if (ArrayUtils.isNotEmpty(filenames)) {
 				for (String filename : filenames) {
 					final File file = new File(prohibitText.getBasedir() + File.separator + filename);
-					getLog().debug("Include " + filename);
+					printDebugLog("Include " + filename);
 
 					try {
 						prohibitTextErrors.addAll(prohibitTextChecker.check(file, prohibitText.getProhibitTextPatterns()));
 					} catch (IOException e) {
-						getLog().error(String.format("Cannot read target file. [%s]", filename), e);
+						throw new MojoFailureException("Cannot read target file. [%s]");
 					}
 				}
 			}
 
-			printLog("Done...");
+			printInfoLog("Done...");
 		}
 
 		if (CollectionUtils.isNotEmpty(prohibitTextErrors)) {
 			for (ProhibitTextError textError : prohibitTextErrors) {
-				printLog(textError.toString());
+				printInfoLog(textError.toString());
 			}
 
 			throw new MojoFailureException(String.format("%d files have prohibit text!", prohibitTextErrors.size()));
 		}
-
-		printLog("----- There is no prohibit text -----");
 	}
 
 	public void setProhibitTextChecker(ProhibitTextChecker prohibitTextChecker) {

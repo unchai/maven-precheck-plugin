@@ -16,6 +16,7 @@
  */
 package org.openwebtop.maven.plugins.precheck;
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
@@ -24,8 +25,8 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.junit.Before;
 import org.junit.Test;
-import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitText;
 import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitTextChecker;
+import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitText;
 
 /**
  * Prohibit text checker mojo test
@@ -48,8 +49,11 @@ public class ProhibitTextCheckerMojoTest {
 		prohibitTextCheckerMojo.setProhibitTextChecker(prohibitTextChecker);
 	}
 
+	/**
+	 * Test when prohibit text found.
+	 */
 	@Test
-	public void testExecute() throws Exception {
+	public void testExecute_CASE1() throws Exception {
 		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {"test.html"});
 
 		final File baseDirectory = FileUtils.toFile(ProhibitTextCheckerMojoTest.class.getResource("prohibittext"));
@@ -64,6 +68,14 @@ public class ProhibitTextCheckerMojoTest {
 
 		final File file = FileUtils.toFile(ProhibitTextCheckerMojoTest.class.getResource("prohibittext/test.html"));
 		verify(prohibitTextChecker, times(1)).check(file, errorString);
+	}
+
+	@Test
+	public void textExecute_CASE2() throws Exception {
+		prohibitTextCheckerMojo.setProhibitTexts(null);
+		prohibitTextCheckerMojo.execute();
+
+		verify(prohibitTextChecker, never()).check(any(File.class), any(String[].class));
 	}
 
 }
