@@ -16,55 +16,46 @@
  */
 package org.openwebtop.maven.plugins.precheck.environment.model;
 
-import java.io.File;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * Environment Error
+ * Environment checker configuration
  * 
  * @author Jaehyeon Nam (dotoli21@gmail.com)
  * @since 2010. 10. 14.
  */
-public class EnvironmentError {
-	private File file;
-	private int lineNumber;
-	private String line;
-	private String detectedString;
+public class EnvironmentFiles {
+	private String basedir;
+	private String[] includes;
+	private String[] excludes;
 
-	public File getFile() {
-		return file;
+	public String getBasedir() {
+		return basedir;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
+	public void setBasedir(String basedir) {
+		this.basedir = basedir;
 	}
 
-	public int getLineNumber() {
-		return lineNumber;
+	public String[] getIncludes() {
+		return includes;
 	}
 
-	public void setLineNumber(int lineNumber) {
-		this.lineNumber = lineNumber;
+	public void setIncludes(String[] includes) {
+		this.includes = includes;
 	}
 
-	public String getLine() {
-		return line;
+	public String[] getExcludes() {
+		return excludes;
 	}
 
-	public void setLine(String line) {
-		this.line = line;
-	}
-
-	public String getDetectedString() {
-		return detectedString;
-	}
-
-	public void setDetectedString(String detectedString) {
-		this.detectedString = detectedString;
+	public void setExcludes(String[] excludes) {
+		this.excludes = excludes;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("File=%s, Line=%s, Lines=%d, DetectedString=%s", file.getPath(), line, lineNumber, detectedString);
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

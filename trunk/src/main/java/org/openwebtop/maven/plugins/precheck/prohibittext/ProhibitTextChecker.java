@@ -35,6 +35,7 @@ import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextErro
  * @since 2010. 5. 5.
  */
 public class ProhibitTextChecker {
+
 	/**
 	 * Check text files
 	 *

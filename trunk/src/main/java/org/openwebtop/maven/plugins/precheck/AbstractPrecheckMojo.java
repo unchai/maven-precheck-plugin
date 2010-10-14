@@ -17,6 +17,8 @@
 package org.openwebtop.maven.plugins.precheck;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
 
@@ -60,10 +62,58 @@ public abstract class AbstractPrecheckMojo extends AbstractMojo {
 		return settings;
 	}
 
-	public abstract String getGoalName();
-
-	public void printLog(String message) {
+	/**
+	 * Print info log
+	 * 
+	 * @param message
+	 */
+	public void printInfoLog(String message) {
 		getLog().info(getGoalName() + " : " + message);
 	}
+
+	/**
+	 * Print error log
+	 * 
+	 * @param message
+	 */
+	public void printErrorLog(String message, Throwable t) {
+		getLog().error(getGoalName() + " : " + message, t);
+	}
+
+	/**
+	 * Print debug log
+	 * 
+	 * @param message
+	 */
+	public void printDebugLog(String message) {
+		getLog().debug(getGoalName() + " : " + message);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (skip == false) {
+			printInfoLog("----- Start to '" + getGoalName() + "' -----");
+			onExecute();
+			printInfoLog("----- Goal '" + getGoalName() + "' has been done -----");
+		}
+	}
+
+	/**
+	 * Goal name
+	 * 
+	 * @return Goal name
+	 */
+	public abstract String getGoalName();
+
+	/**
+	 * Maven plugin entry point
+	 * 
+	 * @throws MojoExecutionException MojoExecutionException
+	 * @throws MojoFailureException MojoFailureException
+	 */
+	public abstract void onExecute() throws MojoExecutionException, MojoFailureException;
 
 }
