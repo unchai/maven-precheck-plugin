@@ -7,7 +7,7 @@
 	<prerequisites>
 		<maven>${maven.version}</maven>
 	</prerequisites>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<parent>
 		<artifactId>oss-parent</artifactId>
 		<groupId>org.sonatype.oss</groupId>
@@ -23,8 +23,8 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:https://maven-precheck-plugin.googlecode.com/svn</connection>
-		<developerConnection>scm:svn:https://maven-precheck-plugin.googlecode.com/svn</developerConnection>
+		<connection>scm:svn:https://maven-precheck-plugin.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://maven-precheck-plugin.googlecode.com/svn/trunk</developerConnection>
 		<url>http://code.google.com/p/maven-precheck-plugin/source/browse</url>
 	</scm>
 	<issueManagement>
