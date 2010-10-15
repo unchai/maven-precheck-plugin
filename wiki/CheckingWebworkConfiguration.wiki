@@ -22,11 +22,10 @@ The following configuration snippet would check webwork configuration.
         </executions>
         <configuration>
           <webworkConfiguration>
-            <webworkConfigurationFiles>
-              <webworkConfigurationFile>src/main/resources/xwork.xml</webworkConfigurationFile>
-              <webworkConfigurationFile>src/main/resources/xwork-part1.xml</webworkConfigurationFile>
-              <webworkConfigurationFile>src/main/resources/xwork-part2.xml</webworkConfigurationFile>
-            </webworkConfigurationFiles>
+            <basedir>src/main/resources/common</basedir>
+            <includes>
+              <include>xwork*.xml</include>
+            </include>
           </webworkConfiguration>
         </configuration>
       </plugin>
