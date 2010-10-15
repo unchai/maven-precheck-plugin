@@ -1,0 +1,42 @@
+#summary Check prohibit text from target files
+
+=== Check prohibit text from target files === 
+
+The following configuration snippet would check all files in the directory '''web''' has prohibit text {{{<img src="http://localhost/title.jpg" />}}}
+
+{{{
+  <build>
+    <plugins>
+      ...
+      <plugin>
+        <groupId>org.openwebtop.maven.plugins</groupId>
+        <artifactId>maven-precheck-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prohibittext</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>prohibittext</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <prohibitText>
+            <basedir>web</basedir>
+            <includes>
+              <include>**/**</include>
+            </includes>
+            <prohibitTextPatterns>
+              <prohibitTextPattern>
+                 <![CDATA[<img[^>]*src="http://localhost[^>]*>]]>
+              </prohibitTextPattern>
+              <prohibitTextPattern>
+                <![CDATA[<script[^>]*src="http://localhost[^>]*]]>
+              </prohibitTextPattern>
+            </prohibitTextPatterns>
+          </prohibitText>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+}}}

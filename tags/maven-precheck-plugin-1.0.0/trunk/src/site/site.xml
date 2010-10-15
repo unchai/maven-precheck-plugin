@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Maven Precheck Plugin" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+	<publishDate position="right" />
+
+	<version position="right" />
+
+	<bannerLeft>
+		<name>Maven Precheck Plugin</name>
+	</bannerLeft>
+
+	<body>
+		<breadcrumbs>
+			<item name="OpenWebtop" href="http://openwebtop.org/" />
+			<item name="Maven Precheck Plugin" href="http://openwebtop.org/maven-precheck-plugin" />
+		</breadcrumbs>
+
+		<links>
+			<item name="Maven 2" href="http://maven.apache.org/" />
+		</links>
+
+		<menu ref="parent" />
+
+		<menu name="Overview">
+			<item name="Introduction" href="index.html" />
+			<item name="Goals" href="plugin-info.html" />
+			<item name="Usage" href="usage.html" />
+		</menu>
+
+		<menu name="Examples">
+			<item name="Checking prohibit text" href="examples/prohibittext.html" />
+			<item name="Checking webwork configuration" href="examples/webwork.html" />
+		</menu>
+
+		<menu ref="reports" inherit="bottom" />
+	</body>
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-default-skin</artifactId>
+		<version>1.0</version>
+	</skin>
+
+</project>
