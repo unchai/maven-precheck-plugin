@@ -27,31 +27,31 @@ This goal will check to make sure "local|devel"'s specific strings not in "relea
         </executions>
         <configuration>
           <environments>
-                <environment>
-                  <description>Check IP Address</description>
-                  <extractRegExp><![CDATA[\b(?:\d{1,3}\.){3}\d{1,3}\b]]></extractRegExp>
-                  <checkTarget>
-                    <basedir>src/main/resources/real</basedir>
-                    <includes>
-                      <include>**/**</include>
-                    </includes>
-                    <excludes>
-                      <exclude>**/.svn/**</exclude>
-                    </excludes>
-                  </checkTarget>
-                  <checkSource>
-                    <basedir>src/main/resources</basedir>
-                    <includes>
-                      <include>local/**/**</include>
-                      <include>test/**/**</include>
-                      <include>dev/**/**</include>
-                    </includes>
-                    <excludes>
-                      <exclude>**/.svn/**</exclude>
-                    </excludes>
-                  </checkSource>
-                </environment>
-              </environments>
+            <environment>
+            <description>Check IP Address</description>
+              <extractRegExp><![CDATA[\b(?:\d{1,3}\.){3}\d{1,3}\b]]></extractRegExp>
+              <checkTarget>
+                <basedir>src/main/resources/real</basedir>
+                <includes>
+                  <include>**/**</include>
+                </includes>
+                <excludes>
+                  <exclude>**/.svn/**</exclude>
+                </excludes>
+              </checkTarget>
+              <checkSource>
+                <basedir>src/main/resources</basedir>
+                <includes>
+                  <include>local/**/**</include>
+                  <include>test/**/**</include>
+                  <include>dev/**/**</include>
+                </includes>
+                <excludes>
+                  <exclude>**/.svn/**</exclude>
+                </excludes>
+              </checkSource>
+            </environment>
+          </environments>
         </configuration>
       </plugin>
     </plugins>
