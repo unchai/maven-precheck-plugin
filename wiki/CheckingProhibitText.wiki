@@ -21,20 +21,22 @@ The following configuration snippet would check all files in the directory '''we
           </execution>
         </executions>
         <configuration>
-          <prohibitText>
-            <basedir>web</basedir>
-            <includes>
-              <include>**/**</include>
-            </includes>
-            <prohibitTextPatterns>
-              <prohibitTextPattern>
-                 <![CDATA[<img[^>]*src="http://localhost[^>]*>]]>
-              </prohibitTextPattern>
-              <prohibitTextPattern>
-                <![CDATA[<script[^>]*src="http://localhost[^>]*]]>
-              </prohibitTextPattern>
-            </prohibitTextPatterns>
-          </prohibitText>
+          <prohibitTexts>
+            <prohibitText>
+              <basedir>web</basedir>
+              <includes>
+                <include>**/**</include>
+              </includes>
+              <prohibitTextPatterns>
+                <prohibitTextPattern>
+                   <![CDATA[<img[^>]*src="http://localhost[^>]*>]]>
+                </prohibitTextPattern>
+                <prohibitTextPattern>
+                  <![CDATA[<script[^>]*src="http://localhost[^>]*]]>
+                </prohibitTextPattern>
+              </prohibitTextPatterns>
+            </prohibitText>
+          </prohibitTexts>
         </configuration>
       </plugin>
     </plugins>
