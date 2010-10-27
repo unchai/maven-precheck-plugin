@@ -14,26 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openwebtop.maven.plugins.precheck.environment.model;
+package org.openwebtop.maven.plugins.precheck.common.model;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import java.io.File;
 
 /**
- * Environment checker configuration
- * 
+ * Default directory scanner configuration
+ *
  * @author Jaehyeon Nam (dotoli21@gmail.com)
- * @since 2010. 10. 14.
+ * @since 2010. 10. 26.
  */
-public class EnvironmentFiles {
-	private String basedir;
+public class DefaultDirectoryScannerConfiguration {
+	private File basedir;
 	private String[] includes;
 	private String[] excludes;
 
-	public String getBasedir() {
+	public File getBasedir() {
 		return basedir;
 	}
 
-	public void setBasedir(String basedir) {
+	public void setBasedir(File basedir) {
 		this.basedir = basedir;
 	}
 
@@ -51,11 +51,6 @@ public class EnvironmentFiles {
 
 	public void setExcludes(String[] excludes) {
 		this.excludes = excludes;
-	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

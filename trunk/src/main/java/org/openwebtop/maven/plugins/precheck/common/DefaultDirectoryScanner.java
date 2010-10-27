@@ -14,25 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openwebtop.maven.plugins.precheck.prohibittext.model;
+package org.openwebtop.maven.plugins.precheck.common;
 
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.openwebtop.maven.plugins.precheck.common.model.DefaultDirectoryScannerConfiguration;
 
 /**
- * Prohibit text check maven configuration
+ * Default directory scanner
  *
  * @author Jaehyeon Nam (dotoli21@gmail.com)
- * @since 2010. 5. 3.
+ * @since 2010. 10. 26.
  */
-public class ProhibitText extends DefaultDirectoryScannerConfiguration {
-	private String[] prohibitTextPatterns;
+public class DefaultDirectoryScanner {
 
-	public String[] getProhibitTextPatterns() {
-		return prohibitTextPatterns;
-	}
+	public String[] getIncludedFiles(DefaultDirectoryScannerConfiguration defaultDirectoryScannerConfiguration) throws Exception {
+		final DirectoryScanner directoryScanner = new DirectoryScanner();
+		directoryScanner.setBasedir(defaultDirectoryScannerConfiguration.getBasedir());
+		directoryScanner.setIncludes(defaultDirectoryScannerConfiguration.getIncludes());
+		directoryScanner.setExcludes(defaultDirectoryScannerConfiguration.getExcludes());
 
-	public void setProhibitTextPatterns(String[] prohibitTextPatterns) {
-		this.prohibitTextPatterns = prohibitTextPatterns;
+		try {
+			directoryScanner.scan();
+		} catch (IllegalStateException e) {
+			throw new Exception(e);
+		}
+
+		return directoryScanner.getIncludedFiles();
 	}
 
 }

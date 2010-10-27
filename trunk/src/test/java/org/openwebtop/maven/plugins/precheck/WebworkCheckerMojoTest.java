@@ -25,11 +25,11 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.DirectoryScanner;
 import org.junit.Before;
 import org.junit.Test;
+import org.openwebtop.maven.plugins.precheck.common.DefaultDirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.model.DefaultDirectoryScannerConfiguration;
 import org.openwebtop.maven.plugins.precheck.webwork.WebworkConfigurationParser;
-import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkConfiguration;
 import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkPackage;
 import org.xml.sax.SAXException;
 
@@ -42,16 +42,16 @@ import org.xml.sax.SAXException;
 public class WebworkCheckerMojoTest {
 	private WebworkConfigurationParser webworkConfigurationParser;
 	private WebworkCheckerMojo webworkCheckerMojo;
-	private DirectoryScanner directoryScanner;
+	private DefaultDirectoryScanner defaultDirectoryScanner;
 
 	@Before
 	public void setUp() throws Exception {
 		webworkConfigurationParser = mock(WebworkConfigurationParser.class);
-		directoryScanner = mock(DirectoryScanner.class);
+		defaultDirectoryScanner = mock(DefaultDirectoryScanner.class);
 
 		webworkCheckerMojo = new WebworkCheckerMojo();
 		webworkCheckerMojo.setWebworkConfigurationParser(webworkConfigurationParser);
-		webworkCheckerMojo.setDirectoryScanner(directoryScanner);
+		webworkCheckerMojo.setDefaultDirectoryScanner(defaultDirectoryScanner);
 	}
 
 	@Test(expected = MojoFailureException.class)
@@ -60,10 +60,10 @@ public class WebworkCheckerMojoTest {
 		final String filename = "xwork-action-error.xml";
 		final File file = new File(basedir.getAbsolutePath() + File.separator + filename);
 
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {filename});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {filename});
 		when(webworkConfigurationParser.getWebworkPackages(file)).thenReturn(getMock(file));
 
-		final WebworkConfiguration webworkConfiguration = new WebworkConfiguration();
+		final DefaultDirectoryScannerConfiguration webworkConfiguration = new DefaultDirectoryScannerConfiguration();
 		webworkConfiguration.setBasedir(basedir);
 
 		webworkCheckerMojo.setWebworkConfiguration(webworkConfiguration);
@@ -79,10 +79,10 @@ public class WebworkCheckerMojoTest {
 		final String filename = "xwork-packagename-error.xml";
 		final File file = new File(basedir.getAbsolutePath() + File.separator + filename);
 
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {filename});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {filename});
 		when(webworkConfigurationParser.getWebworkPackages(file)).thenReturn(getMock(file));
 
-		final WebworkConfiguration webworkConfiguration = new WebworkConfiguration();
+		final DefaultDirectoryScannerConfiguration webworkConfiguration = new DefaultDirectoryScannerConfiguration();
 		webworkConfiguration.setBasedir(basedir);
 
 		webworkCheckerMojo.setWebworkConfiguration(webworkConfiguration);
@@ -98,10 +98,10 @@ public class WebworkCheckerMojoTest {
 		final String filename = "xwork-namespace-error.xml";
 		final File file = new File(basedir.getAbsolutePath() + File.separator + filename);
 
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {filename});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {filename});
 		when(webworkConfigurationParser.getWebworkPackages(file)).thenReturn(getMock(file));
 
-		final WebworkConfiguration webworkConfiguration = new WebworkConfiguration();
+		final DefaultDirectoryScannerConfiguration webworkConfiguration = new DefaultDirectoryScannerConfiguration();
 		webworkConfiguration.setBasedir(basedir);
 
 		webworkCheckerMojo.setWebworkConfiguration(webworkConfiguration);
@@ -117,10 +117,10 @@ public class WebworkCheckerMojoTest {
 		final String filename = "xwork-packagename-error.xml";
 		final File file = new File(basedir.getAbsolutePath() + File.separator + filename);
 
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {filename, filename});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {filename, filename});
 		when(webworkConfigurationParser.getWebworkPackages(file)).thenReturn(getMock(file));
 
-		final WebworkConfiguration webworkConfiguration = new WebworkConfiguration();
+		final DefaultDirectoryScannerConfiguration webworkConfiguration = new DefaultDirectoryScannerConfiguration();
 		webworkConfiguration.setBasedir(basedir);
 
 		webworkCheckerMojo.setWebworkConfiguration(webworkConfiguration);
@@ -136,10 +136,10 @@ public class WebworkCheckerMojoTest {
 		final String filename = "xwork.xml";
 		final File file = new File(basedir.getAbsolutePath() + File.separator + filename);
 
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {filename});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {filename});
 		when(webworkConfigurationParser.getWebworkPackages(file)).thenReturn(getMock(file));
 
-		final WebworkConfiguration webworkConfiguration = new WebworkConfiguration();
+		final DefaultDirectoryScannerConfiguration webworkConfiguration = new DefaultDirectoryScannerConfiguration();
 		webworkConfiguration.setBasedir(basedir);
 
 		webworkCheckerMojo.setWebworkConfiguration(webworkConfiguration);
@@ -152,9 +152,9 @@ public class WebworkCheckerMojoTest {
 	@Test(expected = MojoFailureException.class)
 	public void testExecute_CASE5() throws Exception {
 		when(webworkConfigurationParser.getWebworkPackages(any(File.class))).thenThrow(new IOException());
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {"test"});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {"test"});
 
-		webworkCheckerMojo.setWebworkConfiguration(new WebworkConfiguration());
+		webworkCheckerMojo.setWebworkConfiguration(new DefaultDirectoryScannerConfiguration());
 		webworkCheckerMojo.execute();
 	}
 
@@ -164,9 +164,9 @@ public class WebworkCheckerMojoTest {
 	@Test(expected = MojoFailureException.class)
 	public void testExecute_CASE6() throws Exception {
 		when(webworkConfigurationParser.getWebworkPackages(any(File.class))).thenThrow(new SAXException());
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {"test"});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {"test"});
 
-		webworkCheckerMojo.setWebworkConfiguration(new WebworkConfiguration());
+		webworkCheckerMojo.setWebworkConfiguration(new DefaultDirectoryScannerConfiguration());
 		webworkCheckerMojo.execute();
 	}
 
