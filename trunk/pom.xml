@@ -7,7 +7,7 @@
 	<prerequisites>
 		<maven>${maven.version}</maven>
 	</prerequisites>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<parent>
 		<artifactId>oss-parent</artifactId>
 		<groupId>org.sonatype.oss</groupId>
