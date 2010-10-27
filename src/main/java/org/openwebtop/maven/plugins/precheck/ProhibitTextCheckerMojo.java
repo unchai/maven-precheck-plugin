@@ -25,7 +25,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.DefaultDirectoryScanner;
 import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitTextChecker;
 import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitText;
 import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitTextError;
@@ -51,11 +51,11 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 	private ProhibitText[] prohibitTexts;
 
 	private ProhibitTextChecker prohibitTextChecker;
-	private DirectoryScanner directoryScanner;
+	private DefaultDirectoryScanner defaultDirectoryScanner;
 
 	public ProhibitTextCheckerMojo() {
 		prohibitTextChecker = new ProhibitTextChecker();
-		directoryScanner = new DirectoryScanner();
+		defaultDirectoryScanner = new DefaultDirectoryScanner();
 	}
 
 	@Override
@@ -78,12 +78,15 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 		final List<ProhibitTextError> prohibitTextErrors = new ArrayList<ProhibitTextError>();
 
 		for (ProhibitText prohibitText : prohibitTexts) {
-			directoryScanner.setBasedir(prohibitText.getBasedir());
-			directoryScanner.setIncludes(prohibitText.getIncludes());
-			directoryScanner.setExcludes(prohibitText.getExcludes());
-			directoryScanner.scan();
+			String[] filenames = null;
 
-			final String[] filenames = directoryScanner.getIncludedFiles();
+			try {
+				filenames = defaultDirectoryScanner.getIncludedFiles(prohibitText);
+			} catch (Exception e) {
+				printErrorLog("error has been occured :" + e.getMessage());
+				continue;
+			}
+
 			printInfoLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
 			printInfoLog("Start checking...");
 
@@ -116,8 +119,8 @@ public class ProhibitTextCheckerMojo extends AbstractPrecheckMojo {
 		this.prohibitTextChecker = prohibitTextChecker;
 	}
 
-	public void setDirectoryScanner(DirectoryScanner directoryScanner) {
-		this.directoryScanner = directoryScanner;
+	public void setDefaultDirectoryScanner(DefaultDirectoryScanner defaultDirectoryScanner) {
+		this.defaultDirectoryScanner = defaultDirectoryScanner;
 	}
 
 	public ProhibitText[] getProhibitTexts() {

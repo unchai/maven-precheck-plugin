@@ -25,9 +25,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.DefaultDirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.model.DefaultDirectoryScannerConfiguration;
 import org.openwebtop.maven.plugins.precheck.customtag.CustomTagChecker;
-import org.openwebtop.maven.plugins.precheck.customtag.model.CustomTag;
 import org.openwebtop.maven.plugins.precheck.customtag.model.CustomTagError;
 
 /**
@@ -47,14 +47,14 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 	 * 
 	 * @parameter
 	 */
-	private CustomTag customTag;
+	private DefaultDirectoryScannerConfiguration customTag;
 
 	private CustomTagChecker customTagChecker;
-	private DirectoryScanner directoryScanner;
+	private DefaultDirectoryScanner defaultDirectoryScanner;
 
 	public CustomTagCheckerMojo() {
 		customTagChecker = new CustomTagChecker();
-		directoryScanner = new DirectoryScanner();
+		defaultDirectoryScanner = new DefaultDirectoryScanner();
 	}
 
 	@Override
@@ -68,12 +68,15 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 			return;
 		}
 
-		directoryScanner.setBasedir(customTag.getBasedir());
-		directoryScanner.setIncludes(customTag.getIncludes());
-		directoryScanner.setExcludes(customTag.getExcludes());
-		directoryScanner.scan();
+		String[] filenames = null;
 
-		final String[] filenames = directoryScanner.getIncludedFiles();
+		try {
+			filenames = defaultDirectoryScanner.getIncludedFiles(customTag);
+		} catch (Exception e) {
+			printErrorLog("error has been occured :" + e.getMessage());
+			return;
+		}
+
 		printInfoLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
 		printInfoLog("Start searching...");
 
@@ -101,12 +104,12 @@ public class CustomTagCheckerMojo extends AbstractPrecheckMojo {
 		}
 	}
 
-	public void setCustomTag(CustomTag customTag) {
+	public void setCustomTag(DefaultDirectoryScannerConfiguration customTag) {
 		this.customTag = customTag;
 	}
 
-	public void setDirectoryScanner(DirectoryScanner directoryScanner) {
-		this.directoryScanner = directoryScanner;
+	public void setDefaultDirectoryScanner(DefaultDirectoryScanner defaultDirectoryScanner) {
+		this.defaultDirectoryScanner = defaultDirectoryScanner;
 	}
 
 	public void setCustomTagChecker(CustomTagChecker customTagChecker) {

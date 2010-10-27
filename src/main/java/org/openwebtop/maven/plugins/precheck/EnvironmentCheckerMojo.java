@@ -25,11 +25,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.DefaultDirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.model.DefaultDirectoryScannerConfiguration;
 import org.openwebtop.maven.plugins.precheck.environment.EnvironmentChecker;
 import org.openwebtop.maven.plugins.precheck.environment.model.Environment;
 import org.openwebtop.maven.plugins.precheck.environment.model.EnvironmentError;
-import org.openwebtop.maven.plugins.precheck.environment.model.EnvironmentFiles;
 
 /**
  * Environment Checker
@@ -49,6 +49,12 @@ public class EnvironmentCheckerMojo extends AbstractPrecheckMojo {
 	 */
 	private Environment[] environments;
 
+	private DefaultDirectoryScanner defaultDirectoryScanner;
+
+	public EnvironmentCheckerMojo() {
+		this.defaultDirectoryScanner = new DefaultDirectoryScanner();
+	}
+
 	@Override
 	public String getGoalName() {
 		return GOAL_NAME;
@@ -66,8 +72,14 @@ public class EnvironmentCheckerMojo extends AbstractPrecheckMojo {
 		for (Environment environment : environments) {
 			final EnvironmentChecker environmentChecker = new EnvironmentChecker();
 			environmentChecker.setExtractRegExp(environment.getExtractRegExp());
-			environmentChecker.setCheckTargetFiles(getFilelist(environment.getCheckTarget()));
-			environmentChecker.setCheckSourceFiles(getFilelist(environment.getCheckSource()));
+
+			try {
+				environmentChecker.setCheckTargetFiles(getFilelist(environment.getCheckTarget()));
+				environmentChecker.setCheckSourceFiles(getFilelist(environment.getCheckSource()));
+			} catch (Exception e) {
+				printErrorLog("error has been occured :" + e.getMessage());
+				continue;
+			}
 
 			try {
 				environmentErrors.addAll(environmentChecker.check());
@@ -85,14 +97,8 @@ public class EnvironmentCheckerMojo extends AbstractPrecheckMojo {
 		}
 	}
 
-	private File[] getFilelist(EnvironmentFiles environmentFiles) {
-		final DirectoryScanner directoryScanner = new DirectoryScanner();
-		directoryScanner.setBasedir(environmentFiles.getBasedir());
-		directoryScanner.setIncludes(environmentFiles.getIncludes());
-		directoryScanner.setExcludes(environmentFiles.getExcludes());
-		directoryScanner.scan();
-
-		final String[] filelist = directoryScanner.getIncludedFiles();
+	private File[] getFilelist(DefaultDirectoryScannerConfiguration environmentFiles) throws Exception {
+		final String[] filelist = defaultDirectoryScanner.getIncludedFiles(environmentFiles);
 
 		final List<File> files = new ArrayList<File>();
 
@@ -105,6 +111,10 @@ public class EnvironmentCheckerMojo extends AbstractPrecheckMojo {
 
 	public void setEnvironments(Environment[] environments) {
 		this.environments = environments;
+	}
+
+	public void setDefaultDirectoryScanner(DefaultDirectoryScanner defaultDirectoryScanner) {
+		this.defaultDirectoryScanner = defaultDirectoryScanner;
 	}
 
 }

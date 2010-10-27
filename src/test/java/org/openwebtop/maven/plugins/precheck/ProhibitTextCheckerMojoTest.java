@@ -22,9 +22,10 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.util.DirectoryScanner;
 import org.junit.Before;
 import org.junit.Test;
+import org.openwebtop.maven.plugins.precheck.common.DefaultDirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.model.DefaultDirectoryScannerConfiguration;
 import org.openwebtop.maven.plugins.precheck.prohibittext.ProhibitTextChecker;
 import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitText;
 
@@ -35,17 +36,17 @@ import org.openwebtop.maven.plugins.precheck.prohibittext.model.ProhibitText;
  * @since 2010. 5. 5.
  */
 public class ProhibitTextCheckerMojoTest {
-	private DirectoryScanner directoryScanner;
+	private DefaultDirectoryScanner defaultDirectoryScanner;
 	private ProhibitTextChecker prohibitTextChecker;
 	private ProhibitTextCheckerMojo prohibitTextCheckerMojo;
 
 	@Before
 	public void setUp() throws Exception {
-		directoryScanner = mock(DirectoryScanner.class);
+		defaultDirectoryScanner = mock(DefaultDirectoryScanner.class);
 		prohibitTextChecker = mock(ProhibitTextChecker.class);
 
 		prohibitTextCheckerMojo = new ProhibitTextCheckerMojo();
-		prohibitTextCheckerMojo.setDirectoryScanner(directoryScanner);
+		prohibitTextCheckerMojo.setDefaultDirectoryScanner(defaultDirectoryScanner);
 		prohibitTextCheckerMojo.setProhibitTextChecker(prohibitTextChecker);
 	}
 
@@ -54,7 +55,7 @@ public class ProhibitTextCheckerMojoTest {
 	 */
 	@Test
 	public void testExecute_CASE1() throws Exception {
-		when(directoryScanner.getIncludedFiles()).thenReturn(new String[] {"test.html"});
+		when(defaultDirectoryScanner.getIncludedFiles(any(DefaultDirectoryScannerConfiguration.class))).thenReturn(new String[] {"test.html"});
 
 		final File baseDirectory = FileUtils.toFile(ProhibitTextCheckerMojoTest.class.getResource("prohibittext"));
 		final String[] errorString = new String[] {"error_string"};

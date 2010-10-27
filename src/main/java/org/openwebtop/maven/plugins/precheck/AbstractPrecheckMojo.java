@@ -65,7 +65,7 @@ public abstract class AbstractPrecheckMojo extends AbstractMojo {
 	/**
 	 * Print info log
 	 * 
-	 * @param message
+	 * @param message Message
 	 */
 	public void printInfoLog(String message) {
 		getLog().info(getGoalName() + " : " + message);
@@ -74,7 +74,17 @@ public abstract class AbstractPrecheckMojo extends AbstractMojo {
 	/**
 	 * Print error log
 	 * 
-	 * @param message
+	 * @param message Message
+	 */
+	public void printErrorLog(String message) {
+		getLog().error(getGoalName() + " : " + message);
+	}
+
+	/**
+	 * Print error log
+	 * 
+	 * @param message Message
+	 * @param t Throwable
 	 */
 	public void printErrorLog(String message, Throwable t) {
 		getLog().error(getGoalName() + " : " + message, t);
@@ -83,7 +93,7 @@ public abstract class AbstractPrecheckMojo extends AbstractMojo {
 	/**
 	 * Print debug log
 	 * 
-	 * @param message
+	 * @param message Message
 	 */
 	public void printDebugLog(String message) {
 		getLog().debug(getGoalName() + " : " + message);
@@ -98,6 +108,8 @@ public abstract class AbstractPrecheckMojo extends AbstractMojo {
 			printInfoLog("----- Start to '" + getGoalName() + "' -----");
 			onExecute();
 			printInfoLog("----- Goal '" + getGoalName() + "' has been done -----");
+		} else {
+			printInfoLog("----- Goal '" + getGoalName() + "' has been skipped -----");
 		}
 	}
 

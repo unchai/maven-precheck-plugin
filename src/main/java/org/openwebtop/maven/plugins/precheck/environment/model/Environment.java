@@ -17,6 +17,7 @@
 package org.openwebtop.maven.plugins.precheck.environment.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.openwebtop.maven.plugins.precheck.common.model.DefaultDirectoryScannerConfiguration;
 
 /**
  * Environment checker configuration
@@ -27,8 +28,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class Environment {
 	private String description;
 	private String extractRegExp;
-	private EnvironmentFiles checkTarget;
-	private EnvironmentFiles checkSource;
+	private DefaultDirectoryScannerConfiguration checkTarget;
+	private DefaultDirectoryScannerConfiguration checkSource;
 
 	public String getDescription() {
 		return description;
@@ -46,19 +47,19 @@ public class Environment {
 		this.extractRegExp = extractRegExp;
 	}
 
-	public EnvironmentFiles getCheckTarget() {
+	public DefaultDirectoryScannerConfiguration getCheckTarget() {
 		return checkTarget;
 	}
 
-	public void setCheckTarget(EnvironmentFiles checkTarget) {
+	public void setCheckTarget(DefaultDirectoryScannerConfiguration checkTarget) {
 		this.checkTarget = checkTarget;
 	}
 
-	public EnvironmentFiles getCheckSource() {
+	public DefaultDirectoryScannerConfiguration getCheckSource() {
 		return checkSource;
 	}
 
-	public void setCheckSource(EnvironmentFiles checkSource) {
+	public void setCheckSource(DefaultDirectoryScannerConfiguration checkSource) {
 		this.checkSource = checkSource;
 	}
 

@@ -27,13 +27,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.DefaultDirectoryScanner;
+import org.openwebtop.maven.plugins.precheck.common.model.DefaultDirectoryScannerConfiguration;
 import org.openwebtop.maven.plugins.precheck.webwork.WebworkConfigurationParser;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.DuplicateActionNameWebworkCheckerImpl;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.DuplicateNamespaceWebworkCheckerImpl;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.DuplicatedPackageNameWebworkCheckerImpl;
 import org.openwebtop.maven.plugins.precheck.webwork.checker.WebworkChecker;
-import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkConfiguration;
 import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkConfigurationError;
 import org.openwebtop.maven.plugins.precheck.webwork.model.WebworkPackage;
 import org.xml.sax.SAXException;
@@ -55,11 +55,11 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 	 *
 	 * @parameter
 	 */
-	private WebworkConfiguration webworkConfiguration;
+	private DefaultDirectoryScannerConfiguration webworkConfiguration;
 
 	private WebworkConfigurationParser webworkConfigurationParser;
 	private Set<WebworkChecker> webworkCheckers;
-	private DirectoryScanner directoryScanner;
+	private DefaultDirectoryScanner defaultDirectoryScanner;
 
 	public WebworkCheckerMojo() {
 		webworkConfigurationParser = new WebworkConfigurationParser();
@@ -69,7 +69,7 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 		webworkCheckers.add(new DuplicatedPackageNameWebworkCheckerImpl());
 		webworkCheckers.add(new DuplicateNamespaceWebworkCheckerImpl());
 
-		directoryScanner = new DirectoryScanner();
+		defaultDirectoryScanner = new DefaultDirectoryScanner();
 	}
 
 	@Override
@@ -89,12 +89,15 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 			return;
 		}
 
-		directoryScanner.setBasedir(webworkConfiguration.getBasedir());
-		directoryScanner.setIncludes(webworkConfiguration.getIncludes());
-		directoryScanner.setExcludes(webworkConfiguration.getExcludes());
-		directoryScanner.scan();
+		String[] filenames = null;
 
-		final String[] filenames = directoryScanner.getIncludedFiles();
+		try {
+			filenames = defaultDirectoryScanner.getIncludedFiles(webworkConfiguration);
+		} catch (Exception e) {
+			printErrorLog("error has been occured :" + e.getMessage());
+			return;
+		}
+
 		printInfoLog(String.format("%d files has been founded.", ArrayUtils.getLength(filenames)));
 		printInfoLog("Start checking...");
 
@@ -144,7 +147,7 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 		return webworkPackages;
 	}
 
-	public void setWebworkConfiguration(WebworkConfiguration webworkConfiguration) {
+	public void setWebworkConfiguration(DefaultDirectoryScannerConfiguration webworkConfiguration) {
 		this.webworkConfiguration = webworkConfiguration;
 	}
 
@@ -152,8 +155,8 @@ public class WebworkCheckerMojo extends AbstractPrecheckMojo {
 		this.webworkConfigurationParser = webworkConfigurationParser;
 	}
 
-	public void setDirectoryScanner(DirectoryScanner directoryScanner) {
-		this.directoryScanner = directoryScanner;
+	public void setDefaultDirectoryScanner(DefaultDirectoryScanner defaultDirectoryScanner) {
+		this.defaultDirectoryScanner = defaultDirectoryScanner;
 	}
 
 }
