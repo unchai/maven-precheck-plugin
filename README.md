@@ -5,13 +5,13 @@ This plugin is a collection of several prechecking tasks before build project.
 ## Goals Overview
 
 This plugin has two goals:
-- precheck:prohibittext is used to check prohibit text in target files. If prohibit text is exist in target files, maven build will be fail.
-- precheck:webwork is used to check webwork configuration. This task will check the following three rules.
+- `precheck:prohibittext` is used to check prohibit text in target files. If prohibit text is exist in target files, maven build will be fail.
+- `precheck:webwork` is used to check webwork configuration. This task will check the following three rules.
   - Duplicate package name
   - Duplicate package namespace
   - Duplicate action name in package
-- precheck:customtag is used to check undefined custom tag in markup.
-- precheck:environment is used to check application environment-specific each build phase(ex: local, devel, release).
+- `precheck:customtag` is used to check undefined custom tag in markup.
+- `precheck:environment` is used to check application environment-specific each build phase(ex: local, devel, release).
 
 ## Examples
 
