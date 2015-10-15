@@ -6,6 +6,45 @@ This plugin is a collection of several prechecking tasks before build project.
 
 This plugin has two goals:
 - `precheck:prohibittext` is used to check prohibit text in target files. If prohibit text is exist in target files, maven build will be fail.
+`
+  <build>
+    <plugins>
+      ...
+      <plugin>
+        <groupId>org.openwebtop.maven.plugins</groupId>
+        <artifactId>maven-precheck-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prohibittext</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>prohibittext</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <prohibitTexts>
+            <prohibitText>
+              <basedir>web</basedir>
+              <includes>
+                <include>**/**</include>
+              </includes>
+              <prohibitTextPatterns>
+                <prohibitTextPattern>
+                   <![CDATA[<img[^>]*src="http://localhost[^>]*>]]>
+                </prohibitTextPattern>
+                <prohibitTextPattern>
+                  <![CDATA[<script[^>]*src="http://localhost[^>]*]]>
+                </prohibitTextPattern>
+              </prohibitTextPatterns>
+            </prohibitText>
+          </prohibitTexts>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+`
+
 - `precheck:webwork` is used to check webwork configuration. This task will check the following three rules.
   - Duplicate package name
   - Duplicate package namespace
